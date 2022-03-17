@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- 데이터베이스 접속 정보(DataSource) : MySQL -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.cj.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>
+				jdbc:mysql://localhost:3306/weather?useUnicode=yes&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC
+			</value>
+		</property>
+		<property name="username">
+			<value>user00</value>
+		</property>
+		<property name="password">
+			<value>1234</value>
+		</property>
+	</bean>
+
+	<!-- Mapper 인터페이스를 이용하는 MyBatis 설정 -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- Mapper 인터페이스 설정 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="kr.co.weather.dao" />
+	</bean>
+
+	<!-- 트랜잭션 관련 bean -->
+	<!-- Spring JDBC와 MyBatis의 트랜잭션 매니저 -->
+	<bean
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		id="transactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 어노테이션이 붙은 클래스의 빈을 자동 생성해주는 패키지 설정 -->
+	<!-- test 클래스에서 테스트할 때 주석 처리 제거, namespaces에서 context도 추가 -->
+	<context:component-scan base-package="kr.co.weather" />
+
+	<!-- annotation을 이용해서 트랜잭션을 사용할 수 있도록 해주는 설정 -->
+	<tx:annotation-driven />
+
+</beans>
