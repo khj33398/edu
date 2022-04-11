@@ -26,7 +26,7 @@ public class ExcelController {
 	//location 업로드 폼
 	@GetMapping("/uploadlocation")
 	public String uploadlocationform() {
-		return "/admin/uploadlocationform";
+		return "/admin/uploadlocationform.page";
 	}
 	
 	//실제 location 업로드 처리 후 원래 페이지로 이동
@@ -44,7 +44,7 @@ public class ExcelController {
 	//Record 업로드 폼
 	@GetMapping("/uploadrecord")
 	public String uploadrecordform() {
-		return "/admin/uploadrecordform";
+		return "/admin/uploadrecordform.page";
 	}
 	
 	//실제 record 업로드 처리 후 원래 페이지로 이동

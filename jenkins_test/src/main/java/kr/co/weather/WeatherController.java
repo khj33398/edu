@@ -1,14 +1,26 @@
 package kr.co.weather;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +37,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.co.weather.dao.Mapper;
 import kr.co.weather.domain.LocGrid;
+import kr.co.weather.domain.Location;
 import kr.co.weather.domain.Weather;
 import kr.co.weather.service.WeatherService;
 
@@ -36,6 +49,19 @@ public class WeatherController {
 	
 	@Autowired
 	private Mapper mapper;
+	
+	//기온 예측 데이터 -> python(flask) 서버에서 데이터 가져오기
+	@GetMapping("/getanalysis")
+	public String getAnalysis() {
+		return "getanalysis.page";
+	}
+	
+	@ResponseBody
+	@PostMapping("/getanalysis")
+	public Map<String, Object> getAnalysis(HttpServletRequest request){
+		Map<String, Object> map = wservice.getAnalysis(request);
+		return map;
+	}
 	
 	//기간별 날씨 정보
 	@GetMapping("/periodweather")

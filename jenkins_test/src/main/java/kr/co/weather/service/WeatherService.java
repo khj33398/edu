@@ -12,6 +12,9 @@ import org.json.simple.parser.ParseException;
 import kr.co.weather.domain.*;
 
 public interface WeatherService {
+	//현재일 기준으로 10일 간의 기온 예측
+	public Map<String, Object> getAnalysis(HttpServletRequest request);
+	
 	//기간별 날씨 데이터 조회
 	public Map<String, Object> selectWeatherPeriod(HttpServletRequest request);
 	

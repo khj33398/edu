@@ -19,7 +19,7 @@ public class CsvController {
 	//Record 업로드 폼
 	@GetMapping("/uploadcsvrecord")
 	public String uploadrecordform() {
-		return "/admin/uploadcsvrecordform";
+		return "/admin/uploadcsvrecordform.page";
 	}
 
 	//실제 record 업로드 처리 후 원래 페이지로 이동

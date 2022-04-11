@@ -26,6 +26,62 @@ public class WeatherServiceImpl implements WeatherService {
 	@Autowired
 	private Mapper mapper;
 
+	//현재일 기준으로 10일 간의 기온 예측
+	@Transactional
+	@Override
+	public Map<String, Object> getAnalysis(HttpServletRequest request){
+		Location location = new Location();
+		location.setLocation_state(request.getParameter("loc_state"));
+		location.setLocation_name( request.getParameter("loc_detail"));
+		int location_id = mapper.selectLocation(location).getLocation_id();
+		String url = "http://127.0.0.1:5000/analysis?location="+location_id;
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Content-type", "application/json");
+			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = rd.readLine()) != null) {
+				sb.append(line);
+			}
+			rd.close();
+			conn.disconnect();
+			String result = sb.toString();
+			System.out.println("결과 : " + result);
+		
+			//문자열을 JSON으로 파싱함. 마지막 배열 형태로 저장된 데이터까지 파싱해 냄 
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParser.parse(result);
+			List<String> list1 = new ArrayList<String>();
+			List<Double> list2 = new ArrayList<Double>();
+			List<Double> list3 = new ArrayList<Double>();
+			List<Double> list4 = new ArrayList<Double>();
+			
+			JSONArray date = (JSONArray) jsonObj.get("date");
+			JSONArray max_tmp = (JSONArray) jsonObj.get("max_tmp");
+			JSONArray min_tmp = (JSONArray) jsonObj.get("min_tmp");
+			JSONArray avg_tmp = (JSONArray) jsonObj.get("avg_tmp");
+			
+			for(int i=1; i<date.size(); i++) {
+				list1.add((String)date.get(i));
+				list2.add((Double)max_tmp.get(i));
+				list3.add((Double)min_tmp.get(i));
+				list4.add((Double)avg_tmp.get(i));
+			}
+			map.put("date", list1);
+			map.put("max_tmp", list2);
+			map.put("min_tmp", list3);
+			map.put("avg_tmp", list4);
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+		return map;
+	}
+	
+	
 	//기간별 날씨 데이터 조회
 	@Transactional
 	@Override
