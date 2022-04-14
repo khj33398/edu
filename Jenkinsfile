@@ -5,7 +5,7 @@ pipeline {
 	stages {
 		stage('Build') {
 			steps {
-				bat 'mvn build'
+				bat 'mvn build jenkins_test'
 			}
 		}
 		stage('Test') {
