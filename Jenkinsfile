@@ -26,14 +26,6 @@ pipeline {
 			}
 		}
 	}
-	post {
-		always {
-			junit '**/target/*.xml'
-		}
-		failure {
-			mail to : 'khj33398@naver.com', subject : 'The Pipeline failed :('
-		}
-	}
 }
 
 // Script //
