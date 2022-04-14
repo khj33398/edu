@@ -5,7 +5,7 @@ pipeline {
 	stages {
 		stage('Build') {
 			steps {
-				bat 'make'
+				bat 'mvn clean package'
 				archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
 			}
 		}
@@ -24,14 +24,6 @@ pipeline {
 			steps {
 				bat 'make publish'
 			}
-		}
-	}
-	post {
-		always {
-			junit '**/target/*.xml'
-		}
-		failure {
-			mail to : khj33398@naver.com, subject : 'The Pipeline failed :('
 		}
 	}
 }
