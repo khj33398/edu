@@ -5,7 +5,7 @@ pipeline {
 	stages {
 		stage('Build') {
 			steps {
-				bat bat ' mvn -f jenkins_test/pom.xml clean install' 
+				bat ' mvn -f jenkins_test/pom.xml clean install' 
 				archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
 			}
 		}
